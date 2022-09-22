@@ -22,15 +22,16 @@ function logIn () {
     login.innerHTML = `<h2>Ingreso de Usuarios</h2>
                        <form id = "form_login">
                        <label for = "name">Nombre</label>
-                       <input type = "text" id = "name" name = "userName" required>
+                       <input type = "text" id = "name" name = "userName" placeholder = "Tu nombre" required>
                        <label for = "userDni">DNI</label>
-                       <input type ="number" id ="dni" userDni = "dni" required>
+                       <input type ="number" id ="dni" userDni = "dni" placeholder = "11222333" required>
                        <input type = "button" id = "enviar_form" value="Login">
                        </form>
                        <section class = "wrapper">
                        <span class="texto">No sos usuario?</span>
                        <button type = "submit" id = "new-user">Registrate</button>
                        </section>
+                       <p id = "mensaje"></p>
                       `
     const clickNewUser = document.getElementById('new-user');
     clickNewUser.onclick = () => { 
@@ -49,11 +50,11 @@ function newUser () {
     contenido.innerHTML = `<h3>Ingresa tus datos en el siguiente formulario</h3>
                            <form id = "form_usuario">
                            <label for = "name">Nombre</label>
-                           <input type = "text" id = "name" name = "userName" required>
+                           <input type = "text" id = "name" name = "userName" placeholder = "Juan" required>
                            <label for = "surName">Apellido</label>
-                           <input type = "text" id = "surName" surName = "userSurame" required>
+                           <input type = "text" id = "surName" surName = "userSurame" placeholder = "Perez" required>
                            <label for = "userDni">DNI</label>
-                           <input type ="number" id ="dni" userDni = "dni" required>
+                           <input type ="number" id ="dni" userDni = "dni" placeholder = "12345698" required>
                            <input type = "button" id="enviar_form" value ="Enviar">
                            </form>`
     const userName = document.getElementById('name');
@@ -81,7 +82,7 @@ function home() {
                         <h1 class = "home__h1">Conocé y hacer crecer tus ahorros Criptos</h1>
                         <img class = "home__img" src="./Images/investment7a.jpg" alt="inversion">
                         </section>                        
-                        <p class = "home__p">Seleccioná Ingresar en el menú para  comenzar o Registrate</p>
+                        <p class = "home__p">Seleccioná Ingresar en el menú para comenzar o Registrate</p>
     
     `
 }
@@ -91,13 +92,14 @@ function ingresar() {
     const login = document.getElementById('login');
     const userName = document.getElementById('name');
     const userDni = document.getElementById('dni');
+    const parrafo = document.getElementById('mensaje');
     const existeDni = users.some(usuario => usuario.dni === userDni.value);
     if (existeDni == true && userName.value === searchName(dni.value) ) {
         homeUser(userName.value, userDni.value);
-    } else {
-        const parrafo = document.createElement('p');
+    } else if (existeDni == true && userName.value != searchName(dni.value)) {
+        parrafo.innerText = `DNI o Nombre incorrecto`;
+    }  else {
         parrafo.innerText = `DNI no existe . Hace click en registrarte`
-        login.append(parrafo);
     }
 }
 
@@ -151,7 +153,7 @@ function agregarInversion (dni) {
                             <form id = "form_cripto">
                             <label for = "CriptoName">Nombre</label>
                             <input type = "text" id = "CriptoName" name = "CriptoName" required>
-                            <label for = "tag">TAG</label>
+                            <label for = "tag">Ticker</label>
                             <input type = "text" id = "tag" tag = "tag" required>
                             <label for = "Cantidad">Cantidad</label>
                             <input type ="number" id ="Cantidad" Cantidad = "Cantidad" required>
@@ -226,7 +228,7 @@ function deleteInvest(dni) {
     contenido.innerHTML = "";
     const cartera = JSON.parse(localStorage.getItem(dni));
     contenido.innerHTML = `
-                        <h3>Ingresa el Tag de la cripto que deseas borrar</h3>
+                        <h3>Ingresa el Ticker de la cripto que deseas borrar</h3>
                         <input type = "text" id = "Tag" name = "tag" placeholder = "TAG" required>
                         <input type = "button" id = "validar" value = "validar">
                         `
@@ -234,7 +236,6 @@ function deleteInvest(dni) {
     validar.onclick = () => {
         const tag = document.getElementById('Tag');
         const carteraFiltrada = cartera.filter((item) => item.investTag === tag.value);
-        console.log(carteraFiltrada);
         for (let inversion of carteraFiltrada){
             const datos = document.createElement('p');
             datos.innerHTML = `Cripto: ${inversion.investName} TAG: ${inversion.investTag} Cantidad: ${inversion.investAmount} Rendimiento Anual: ${inversion.investRate}%`;
