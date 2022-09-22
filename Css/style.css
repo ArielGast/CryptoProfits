@@ -1,0 +1,48 @@
+body {
+    background: rgb(245,245,245);
+background: linear-gradient(90deg, rgba(245,245,245,1) 0%, rgba(225,201,238,1) 51%, rgba(90,64,97,1) 96%);
+} 
+.nav {
+    width: 80%;
+    display: flex;
+}
+
+ul {
+    list-style: none;
+}
+li {
+    color: rgb(17, 53, 83);
+    padding: 2.5rem;
+    font-size: 1.5rem;
+}
+#login {
+    width: 100%;
+    margin: auto;
+}
+#form_login, #form_cripto {
+    display: flex;
+    flex-direction: column;
+}
+#name, #dni, #CriptoName, #tag, #Cantidad, #Rendimiento {
+    width: 20%;
+}
+#enviar_form {
+    width: 8%;
+    border-radius: 5px;
+    margin-top: 2%;
+}
+.home__h1 {
+    font-size: 4 rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+.home__img {
+    margin-left: 20%;
+    margin-bottom: 5%;
+}
+.home__p {
+    font-size: 1.5rem;
+}
+.wrapper {
+    margin-top: 1% ;
+}
