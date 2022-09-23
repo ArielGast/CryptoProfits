@@ -99,7 +99,7 @@ function ingresar() {
     } else if (existeDni == true && userName.value != searchName(dni.value)) {
         parrafo.innerText = `DNI o Nombre incorrecto`;
     }  else {
-        parrafo.innerText = `DNI no existe . Hace click en registrarte`
+        parrafo.innerText = `DNI no existe. Hace click en registrarte`;
     }
 }
 
@@ -171,14 +171,14 @@ function agregarInversion (dni) {
     cargarForm.onclick = () => { 
         const inversion = new Invest(investName.value, investTag.value, investAmount.value, investRate.value);
         const inversionCargada = JSON.parse(localStorage.getItem(dni));
-        if (inversionCargada == null) {
-            localStorage.setItem(dni, JSON.stringify([inversion]))
-            mensajeCargar (formInver);
-        } else {
-            inversionCargada.push(inversion);
-            localStorage.setItem(dni, JSON.stringify(inversionCargada));
-            mensajeCargar (formInver);
-        } 
+        inversionCargada == null ? (
+            localStorage.setItem(dni, JSON.stringify([inversion])),
+            mensajeCargar (formInver)
+        ) : (
+            inversionCargada.push(inversion),
+            localStorage.setItem(dni, JSON.stringify(inversionCargada)),
+            mensajeCargar(formInver)
+        )
     }     
 }
 
