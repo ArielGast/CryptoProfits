@@ -1,17 +1,29 @@
 body {
-    background: rgb(245,245,245);
-background: linear-gradient(90deg, rgba(245,245,245,1) 0%, rgba(225,201,238,1) 51%, rgba(90,64,97,1) 96%);
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(0,0,0,1) 13%, rgba(63,37,84,1) 46%, rgba(106,103,106,1) 100%);
+    color: rgb(83, 111, 240);
 } 
 .nav {
     width: 80%;
     display: flex;
 }
-
+.nav_link {
+    color:orange;
+    font-size: 1.5rem;
+    padding-left: 1rem;
+    text-decoration: none;
+}
+.nav_link:hover {
+    color: white;
+}
+.nav-img {
+    width: 10%;
+}
 ul {
     list-style: none;
 }
 li {
-    color: rgb(17, 53, 83);
+    color: rgb(204, 24, 144);
     padding: 2.5rem;
     font-size: 1.5rem;
 }
@@ -37,6 +49,7 @@ li {
     text-align: center;
 }
 .home__img {
+    width: 25%;
     margin-left: 20%;
     margin-bottom: 5%;
 }

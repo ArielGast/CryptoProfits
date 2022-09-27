@@ -31,7 +31,6 @@ function logIn () {
                        <span class="texto">No sos usuario?</span>
                        <button type = "submit" id = "new-user">Registrate</button>
                        </section>
-                       <p id = "mensaje"></p>
                       `
     const clickNewUser = document.getElementById('new-user');
     clickNewUser.onclick = () => { 
@@ -80,7 +79,7 @@ function home() {
     home.innerHTML = `
                         <section class = "home">
                         <h1 class = "home__h1">Conocé y hacer crecer tus ahorros Criptos</h1>
-                        <img class = "home__img" src="./Images/investment7a.jpg" alt="inversion">
+                        <img class = "home__img" src="./Images/BodyImage.jpg" alt="inversion">
                         </section>                        
                         <p class = "home__p">Seleccioná Ingresar en el menú para comenzar o Registrate</p>
     
@@ -92,15 +91,26 @@ function ingresar() {
     const login = document.getElementById('login');
     const userName = document.getElementById('name');
     const userDni = document.getElementById('dni');
-    const parrafo = document.getElementById('mensaje');
     const existeDni = users.some(usuario => usuario.dni === userDni.value);
     if (existeDni == true && userName.value === searchName(dni.value) ) {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Ingresaste correctamente',
+            showConfirmButton: false,
+            timer: 1500
+          })
         homeUser(userName.value, userDni.value);
     } else if (existeDni == true && userName.value != searchName(dni.value)) {
-        parrafo.innerText = `DNI o Nombre incorrecto`;
+        Swal.fire({
+            title:'DNI o Nombre Incorrecto',
+            background: '#f2c66b',
+        })
     }  else {
-        parrafo.innerText = `DNI no existe. Hace click en registrarte`;
-    }
+        Swal.fire({
+            title: 'DNI no existe. Hace click en registrarte',
+            background: '#f2c66b',
+    })
 }
 
 // buscar nombre usuario por Dni
@@ -121,9 +131,9 @@ function homeUser (nombre, dni) {
                            </button>
                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                            <div class="navbar-nav">
-                           <a class="nav-link" id= "addInvest"  href="#">Agregar Inversión</a>
-                           <a class="nav-link" id = "consInvest" href="#">Consutlar Cartera</a>
-                           <a class="nav-link" id = "delInvest" href="#">Borrar Inversión</a>
+                           <a class="nav_link" id= "addInvest"  href="#">Agregar Inversión</a>
+                           <a class="nav_link" id = "consInvest" href="#">Consutlar Cartera</a>
+                           <a class="nav_link" id = "delInvest" href="#">Borrar Inversión</a>
                            </div>
                            </div>
                            </div>
@@ -184,11 +194,18 @@ function agregarInversion (dni) {
 
 // Pantalla despues de la carga de una inversion
 function mensajeCargar (form) {
+    Swal.fire({
+        title: 'Cargaste correctamente tu inversión',
+        imageUrl: './Images/pig.jpg',
+        /* background: '#f2c66b', */
+        icon: 'succes',
+        imageWidth: 400,
+        imageHigth: 200,
+        showConfirmButton: false,
+        timer: 2000
+    })
     form.innerHTML = "";
-    form.innerHTML = `
-                    <p>Cargaste correctamente tu inversión</p>
-                    <img class ="imagen_globo" src="./Images/inflandoGlobo.jpg" alt="inflando Globo">
-    `
+    homeUser(nombre, dni);
 }
 
  // Mostrar cartera de inversion 
@@ -197,61 +214,137 @@ function showInvest (dni) {
     mostrarCartera.innerHTML = "";
     const listaInversiones = JSON.parse(localStorage.getItem(dni));
     if (listaInversiones != null) {
-        const lista = document.createElement('ul');
+        const lista = document.createElement('div');
+        lista.classList.add('row');
+        lista.classList.add('row-cols-1');
+        lista.classList.add('row-cols-md-4');
+        lista.classList.add('g-4');
         mostrarCartera.appendChild(lista);
-        for(let inversion of listaInversiones) {
-            let li = document.createElement('li');
-            li.innerHTML = `Cripto: ${inversion.investName} TAG: ${inversion.investTag} Cantidad: ${inversion.investAmount} Rendimiento Anual: ${inversion.investRate}%`;  
-            lista.append(li);
-        } 
+        for (let inversion of listaInversiones){
+            const item = document.createElement('div');
+            item.classList.add('col');
+            item.innerHTML = `
+                            <div class="card">
+                            <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
+                            <div class="card-body">
+                            <h5 class="card-title">${inversion.investName}</h5>
+                            <p class="card-text"> Ticker: ${inversion.investTag}</p>
+                            <p class="card-text"> Cantidad: ${inversion.investAmount}</p>
+                            <p class="card-text"> Rendimiento Anual: ${inversion.investRate}%</p>
+                            </div>
+                            <div class="card-footer">
+                            <small class="text-muted">Saldo proyectado en 1 año: proximamente</small>
+                            </div>
+            `
+            lista.appendChild(item);
+        }
     } else {
-        const parrafo = document.createElement('p');
-        parrafo.innerHTML = `No tienes ninguna inversión cargada`
-        mostrarCartera.appendChild(parrafo);
+        Swal.fire({
+            title: 'Tu cartera se encuentra vacia',
+            background: '#f2c66b',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+        })
     }
 } 
 
 // Cotizaciones de Criptos (a futuro)
-function cotizaciones () {
-    const contenido = document.getElementById('login')
-    contenido.innerHTML = "";
-    const elemento = document.getElementById('content');
-    elemento.innerHTML = "";
-    const parrafo = document.createElement('h3');
-    parrafo.innerHTML = ` Proximamente`;
-    contenido.appendChild(parrafo);
-}
 
+ 
 // borrar inversion
 function deleteInvest(dni) {
     const contenido = document.getElementById('content');
     contenido.innerHTML = "";
+    const text = document.createElement('p');
+    text.innerText = `Elige la Cripto que deseas eliminar`;
+    contenido.appendChild(text);
     const cartera = JSON.parse(localStorage.getItem(dni));
-    contenido.innerHTML = `
-                        <h3>Ingresa el Ticker de la cripto que deseas borrar</h3>
-                        <input type = "text" id = "Tag" name = "tag" placeholder = "TAG" required>
-                        <input type = "button" id = "validar" value = "validar">
-                        `
-    const validar = document.getElementById('validar');
-    validar.onclick = () => {
-        const tag = document.getElementById('Tag');
-        const carteraFiltrada = cartera.filter((item) => item.investTag === tag.value);
+    const seleccionar = document.createElement('select');
+    seleccionar.setAttribute('id', 'eleccion');
+    cartera.forEach(element => {
+        const coin = document.createElement('option')
+        coin.setAttribute("value", `${element.investTag}`);
+        coin.innerText= `${element.investName}`;
+        seleccionar.appendChild(coin);
+    }); 
+    contenido.appendChild(seleccionar);
+    const btnSelec = document.createElement('span');
+    btnSelec.innerHTML = `
+        <input type = "button" id = "Seleccionar" value = "Seleccionar">                
+    ` 
+    contenido.appendChild(btnSelec);
+    const mostrar = document.getElementById('Seleccionar');
+    const mostrarEleccion = document.createElement('div');
+    contenido.appendChild(mostrarEleccion);
+    mostrar.onclick = () => { //muestro la inversion seleccionada
+        mostrarEleccion.innerHTML= "";
+        const elegido = document.getElementById('eleccion')
+        const carteraFiltrada = cartera.filter((item) => item.investTag === elegido.value);
+        const lista = document.createElement('div');
+        lista.classList.add('row');
+        lista.classList.add('row-cols-1');
+        lista.classList.add('row-cols-md-4');
+        lista.classList.add('g-4');
+        mostrarEleccion.appendChild(lista);
         for (let inversion of carteraFiltrada){
-            const datos = document.createElement('p');
-            datos.innerHTML = `Cripto: ${inversion.investName} TAG: ${inversion.investTag} Cantidad: ${inversion.investAmount} Rendimiento Anual: ${inversion.investRate}%`;
-            contenido.appendChild(datos);
-        }
-        const btnBorrar = document.createElement('span');
-        btnBorrar.innerHTML =`
-                            <input type = "button" id = "btn_borrar" value = "Borrar">
-        ` 
-        contenido.appendChild(btnBorrar);
-        const borrar = document.getElementById('btn_borrar');
-        borrar.onclick = () => {
-            const nuevaCartera = cartera.filter(item => item.investTag != tag.value);
-            localStorage.setItem(dni, JSON.stringify(nuevaCartera)); 
-            return showInvest(dni);           
-
+            const item = document.createElement('div');
+            item.classList.add('col');
+            item.innerHTML = `
+                            <div class="card">
+                            <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
+                            <div class="card-body">
+                            <h5 class="card-title">${inversion.investName}</h5>
+                            <p class="card-text"> Ticker: ${inversion.investTag}</p>
+                            <p class="card-text"> Cantidad: ${inversion.investAmount}</p>
+                            <p class="card-text"> Rendimiento Anual: ${inversion.investRate}%</p>
+                            </div>
+                            <div class="card-footer">
+                            <input type = "button" id = "Borrar" value = "Eliminar">
+                            </div>
+            `
+            lista.appendChild(item);
+            const btnBorrar = document.getElementById('Borrar');
+            btnBorrar.onclick = () => { //borrar la inversion 
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                  })     
+                  swalWithBootstrapButtons.fire({
+                    title: 'Confirmar la eliminación?',
+                    text: "La inversión será borrada permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Si, Borrar!',
+                    cancelButtonText: 'No, Cancelar!!',
+                    reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const nuevaCartera = cartera.filter(item => item.investTag != elegido.value);
+                            localStorage.setItem(dni, JSON.stringify(nuevaCartera));     
+                        swalWithBootstrapButtons.fire(
+                            'Borrado!',
+                            'Tu inversión se ha eliminado',
+                            'success'
+                        )
+                        return showInvest(dni);
+                    } else if ( result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire(
+                        'Cancelado',
+                        'Tu inversión sigue estando en tu cartera',
+                        'error'
+                        )
+                        return showInvest(dni);
+                        }
+                    })
+                }
+            }
         }
     }
 }

@@ -17,5 +17,12 @@ inicio.onload = home();
 
 const verCotizaciones = document.getElementById('cotizaciones');
 verCotizaciones.onclick = () => {
-    cotizaciones();
+    const contenido = document.getElementById('login');
+    contenido.innerHTML = "";
+    const elemento = document.getElementById('content');
+    elemento.innerHTML = "";
+    const parrafo = document.createElement('h3');
+    parrafo.innerHTML = ` Proximamente`;
+    contenido.appendChild(parrafo); 
 }
+
