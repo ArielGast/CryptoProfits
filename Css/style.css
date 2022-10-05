@@ -1,15 +1,20 @@
 body {
     background: rgb(0,0,0);
-    background: linear-gradient(90deg, rgba(0,0,0,1) 13%, rgba(63,37,84,1) 46%, rgba(106,103,106,1) 100%);
+    background: linear-gradient(90deg, rgba(0,0,0,1) 13%, rgba(63,37,84,1) 56%, rgba(30,68,40,1) 100%);
     color: rgb(83, 111, 240);
-} 
-.nav {
-    width: 80%;
-    display: flex;
+    font-family: 'Yeseva One', cursive;
 }
+
+/* Nav */
+.nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 8%;
+} 
 .nav_link {
     color:orange;
-    font-size: 1.5rem;
+    font-size: 2rem;
     padding-left: 1rem;
     text-decoration: none;
 }
@@ -17,8 +22,23 @@ body {
     color: white;
 }
 .nav-img {
-    width: 10%;
+    width: 40%;
+    border-radius: 50%;
 }
+.logo-imagen {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.leyenda {
+    margin-top: 5px;
+    color: rgb(120, 216, 120);
+    font-size: 18px;
+    font-weight: 400;
+    text-shadow: 1px 1px rgb(255, 0, 0);
+}
+
 ul {
     list-style: none;
 }
@@ -27,35 +47,97 @@ li {
     padding: 2.5rem;
     font-size: 1.5rem;
 }
-#login {
-    width: 100%;
-    margin: auto;
+
+/* LogIn */
+
+.login__h2 {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 7%;
 }
-#form_login, #form_cripto {
+.login__div {
+    border: 2px solid rgb(120, 216, 120);
+    border-radius: 5px;
+    width: 250px;
+    height: 350px;
+    margin-left: 40%
+}
+.form_login {
+    display:flex;
+    flex-direction: column;
+    margin-left: 2%;
+    width: 350px;
+}
+label {
+    font-size: 28px;
+    padding-top: 5px;
+}
+#name {
+    width: 200px;
+    padding: 5px;
+}
+#dni {
+    width: 100px;
+    padding: 5px;
+}
+#enviar_form {
+    width: 80px;
+    margin-top: 25px;
+    background-color: greenyellow;
+}
+.wrapper {
+    margin-left: 40%;
+    margin-top: 2%;
+}
+#form_cripto {
     display: flex;
     flex-direction: column;
 }
-#name, #dni, #CriptoName, #tag, #Cantidad, #Rendimiento {
-    width: 20%;
+
+/* home */
+.home__div {
+    display: flex;
 }
-#enviar_form {
-    width: 8%;
-    border-radius: 5px;
-    margin-top: 2%;
-}
+
 .home__h1 {
     font-size: 4 rem;
     text-transform: uppercase;
     text-align: center;
+    margin: 7% auto;
 }
 .home__img {
-    width: 25%;
-    margin-left: 20%;
-    margin-bottom: 5%;
+    width: 20%;
 }
 .home__p {
     font-size: 1.5rem;
+    padding-left: 2%;
+    padding-top: 3%;
+    color: rgb(120, 216, 120);
+    text-shadow: 1px 1px blue;
 }
-.wrapper {
-    margin-top: 1% ;
+
+/* home User */
+.homeUser__h3 {
+    margin-top: 5%;
+    font-size: 35px;
+    
+}
+
+/* Mostrar Cotizaciones */
+.tituloCotizaciones {
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.bloqueCoin {
+    display: flex;
+    margin: 5%;
+    justify-content: space-around;
+}
+.coin {
+    padding-left: 2%;
+
+}
+.price {
+    padding: auto;
 }

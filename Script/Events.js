@@ -19,14 +19,16 @@ function logIn () {
     const content = document.getElementById('content');
     content.innerHTML = "";
     login.innerHTML = "";
-    login.innerHTML = `<h2>Ingreso de Usuarios</h2>
-                       <form id = "form_login">
+    login.innerHTML = `<h2 class = "login__h2">Ingreso de Usuarios</h2>
+                       <div class = "login__div">
+                       <div class = "form_login">
                        <label for = "name">Nombre</label>
                        <input type = "text" id = "name" name = "userName" placeholder = "Tu nombre" required>
                        <label for = "userDni">DNI</label>
                        <input type ="number" id ="dni" userDni = "dni" placeholder = "11222333" required>
                        <input type = "button" id = "enviar_form" value="Login">
-                       </form>
+                       </div>
+                       </div>
                        <section class = "wrapper">
                        <span class="texto">No sos usuario?</span>
                        <button type = "submit" id = "new-user">Registrate</button>
@@ -78,11 +80,16 @@ function home() {
     home.innerHTML = "";
     home.innerHTML = `
                         <section class = "home">
-                        <h1 class = "home__h1">Conocé y hacer crecer tus ahorros Criptos</h1>
-                        <img class = "home__img" src="./Images/BodyImage.jpg" alt="inversion">
-                        </section>                        
-                        <p class = "home__p">Seleccioná Ingresar en el menú para comenzar o Registrate</p>
-    
+                        <h1 class = "home__h1">Bienvenidos a CyberCat - Tus ganancias Cryptos en un solo lugar</h1>
+                        <div class ="home__div">
+                        <img class = "home__img" src="./Images/cat1.png" alt="inversion">
+                        <div>
+                        <p class = "home__p">En simples pasos resgistrate y comezá a tener control sobre tus ganacias por stacking de forma clara y sencilla.</p>
+                        <p class = "home__p">En un solo lugar vas a poder ver tus Crytos y conocer el valor de tu cartera al instante.</p>
+                        <p class = "home__p">Consultá la cotización del mercado Crypto en tiempo real y tomá las mejores decisiones.</p>
+                        </div>
+                        </div>
+                        </section>                      
     `
 }
 
@@ -95,8 +102,10 @@ function ingresar() {
     if (existeDni == true && userName.value === searchName(dni.value) ) {
         Swal.fire({
             position: 'top-end',
+            width: 300,
+            background: 'grey', 
             icon: 'success',
-            title: 'Ingresaste correctamente',
+            title: 'Login correcto',
             showConfirmButton: false,
             timer: 1500
           })
@@ -104,12 +113,16 @@ function ingresar() {
     } else if (existeDni == true && userName.value != searchName(dni.value)) {
         Swal.fire({
             title:'DNI o Nombre Incorrecto',
-            background: '#f2c66b',
+            background: 'grey',
+            icon: 'error',
+            width: 300,
         })
     }  else {
         Swal.fire({
             title: 'DNI no existe. Hace click en registrarte',
-            background: '#f2c66b',
+            background: 'grey',
+            icon: 'warning',
+            width: 300
     })
 }
 
@@ -123,7 +136,7 @@ function searchName (dni) {
 function homeUser (nombre, dni) {
     const contenido = document.getElementById('login');
     contenido.innerHTML = "";
-    contenido.innerHTML = `<h3>Bienvenido ${nombre}</h3>
+    contenido.innerHTML = `<h3 class = "homeUser__h3">Bienvenido ${nombre}</h3>
                            <nav class="navbar navbar-expand-lg">
                            <div class="container-fluid">
                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -156,56 +169,82 @@ function homeUser (nombre, dni) {
 
 // Agregar Inversión del usuario logueado
 function agregarInversion (dni) {
+    let coin;
+    let investName;
+    let investTag;
+    let investAmount;
+    let investRate;
     const formInver = document.getElementById('content');
     formInver.innerHTML = "";
-    formInver.innerHTML = `
-                            <h3>Ingresa los datos de la Cripto que tengas</h3>
-                            <form id = "form_cripto">
-                            <label for = "CriptoName">Nombre</label>
-                            <input type = "text" id = "CriptoName" name = "CriptoName" required>
-                            <label for = "tag">Ticker</label>
-                            <input type = "text" id = "tag" tag = "tag" required>
-                            <label for = "Cantidad">Cantidad</label>
-                            <input type ="number" id ="Cantidad" Cantidad = "Cantidad" required>
-                            <label for = "Rendimiento">Rendimiento Anual</label>
-                            <input type ="number" id ="Rendimiento" Rendimiento = "Rendimiento" required>
-                            <input type = "button" id="enviar_form" value ="Cargar">
-                            </form>
-    
-    `
-    const investName = document.getElementById('CriptoName');
-    const investTag = document.getElementById('tag');
-    const investAmount =document.getElementById('Cantidad');
-    const investRate = document.getElementById('Rendimiento');
-    const cargarForm = document.getElementById('enviar_form');
-    cargarForm.onclick = () => { 
-        const inversion = new Invest(investName.value, investTag.value, investAmount.value, investRate.value);
-        const inversionCargada = JSON.parse(localStorage.getItem(dni));
-        inversionCargada == null ? (
-            localStorage.setItem(dni, JSON.stringify([inversion])),
-            mensajeCargar (formInver)
-        ) : (
-            inversionCargada.push(inversion),
-            localStorage.setItem(dni, JSON.stringify(inversionCargada)),
-            mensajeCargar(formInver)
-        )
-    }     
+    const title = document.createElement('h3');
+    title.innerHTML = `Ingresa los datos de la cripto que tengas`
+    formInver.appendChild(title);
+    const seleccionarTicker = document.createElement('select');
+    seleccionarTicker.setAttribute('id', 'eleccion');
+    formInver.appendChild(seleccionarTicker);
+    fetch ('https://api.coinpaprika.com/v1/tickers')
+    .then((respuesta) => respuesta.json())
+    .then((tickers) => {
+        tickers.forEach((ticker) => {
+            console.log(ticker.quotes.USD.price); //obtengo precio
+            coin = document.createElement('option')
+            coin.setAttribute("value", `${ticker.symbol}`);
+            coin.innerText= `${ticker.name}`;
+            seleccionarTicker.appendChild(coin);
+        });
+        const cryptoSeleccionada = document.createElement('button');
+        cryptoSeleccionada.innerText = `Seleccionar`;
+        formInver.appendChild(cryptoSeleccionada);
+        cryptoSeleccionada.onclick = () => {
+            investTag = seleccionarTicker.value;
+            const tag = document.createElement('p');
+            tag.innerText = `Ticker: ${investTag}`;
+            formInver.appendChild(tag);
+            const tagName = tickers.find((ele) => ele.symbol === investTag);
+            investName = tagName.name;
+            const nombreCrypto = document.createElement('p');
+            nombreCrypto.innerText = `Nombre ${investName}`;
+            formInver.appendChild(nombreCrypto);
+            const divisor = document.createElement('div');
+            divisor.innerHTML = `
+                                <label for = "Cantidad">Cantidad</label>
+                                <input type ="number" id ="Cantidad" Cantidad = "Cantidad" required>
+                                <label for = "Rendimiento">Rendimiento Anual</label>
+                                <input type ="number" id ="Rendimiento" Rendimiento = "Rendimiento" required>
+                                <input type = "button" id="enviar_form" value ="Cargar">
+                                    
+                ` 
+            formInver.appendChild(divisor);
+            investAmount =document.getElementById('Cantidad');
+            investRate = document.getElementById('Rendimiento');
+            const cargarForm = document.getElementById('enviar_form');
+            cargarForm.onclick = () => { 
+                const inversion = new Invest(investName, investTag, investAmount.value, investRate.value);
+                const inversionCargada = JSON.parse(localStorage.getItem(dni));
+                inversionCargada == null ? (
+                    localStorage.setItem(dni, JSON.stringify([inversion])),
+                    mensajeCargar(formInver, dni)
+                ) : (
+                    inversionCargada.push(inversion),
+                    localStorage.setItem(dni, JSON.stringify(inversionCargada)),
+                    mensajeCargar(formInver, dni)
+                )
+            } 
+        };
+
+    });
 }
 
 // Pantalla despues de la carga de una inversion
-function mensajeCargar (form) {
+function mensajeCargar(form, dni) {
     Swal.fire({
         title: 'Cargaste correctamente tu inversión',
         imageUrl: './Images/pig.jpg',
-        /* background: '#f2c66b', */
-        icon: 'succes',
-        imageWidth: 400,
-        imageHigth: 200,
-        showConfirmButton: false,
+        icon: 'success',
         timer: 2000
     })
     form.innerHTML = "";
-    homeUser(nombre, dni);
+    showInvest(dni);
 }
 
  // Mostrar cartera de inversion 
@@ -215,28 +254,35 @@ function showInvest (dni) {
     const listaInversiones = JSON.parse(localStorage.getItem(dni));
     if (listaInversiones != null) {
         const lista = document.createElement('div');
+        lista.classList.add('container-fluid');
         lista.classList.add('row');
         lista.classList.add('row-cols-1');
         lista.classList.add('row-cols-md-4');
         lista.classList.add('g-4');
         mostrarCartera.appendChild(lista);
         for (let inversion of listaInversiones){
-            const item = document.createElement('div');
-            item.classList.add('col');
-            item.innerHTML = `
-                            <div class="card">
-                            <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
-                            <div class="card-body">
-                            <h5 class="card-title">${inversion.investName}</h5>
-                            <p class="card-text"> Ticker: ${inversion.investTag}</p>
-                            <p class="card-text"> Cantidad: ${inversion.investAmount}</p>
-                            <p class="card-text"> Rendimiento Anual: ${inversion.investRate}%</p>
-                            </div>
-                            <div class="card-footer">
-                            <small class="text-muted">Saldo proyectado en 1 año: proximamente</small>
-                            </div>
-            `
-            lista.appendChild(item);
+                fetch ('https://api.coinpaprika.com/v1/tickers')
+                .then((respuesta) => respuesta.json())
+                .then ((tickers) => {
+                const busqueda = tickers.find((ele) => ele.symbol == inversion.investTag);
+                const item = document.createElement('div');
+                item.classList.add('col');
+                item.innerHTML = `
+                                <div class="card">
+                                <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
+                                <div class="card-body">
+                                <h5 class="card-title">${inversion.investName}</h5>
+                                <p class="card-text"> Ticker: ${inversion.investTag}</p>
+                                <p class="card-text"> Cantidad: ${inversion.investAmount}</p>
+                                <p class="card-text"> Rendimiento Anual: ${inversion.investRate}%</p>
+                                <p class="card-text"> Precio USD: ${busqueda.quotes.USD.price.toFixed(2)}</p>
+                                </div>
+                                <div class="card-footer">
+                                <small class="text-muted">Saldo proyectado en 1 año: proximamente</small>
+                                </div>
+                `
+                lista.appendChild(item);
+            });
         }
     } else {
         Swal.fire({
@@ -252,9 +298,6 @@ function showInvest (dni) {
     }
 } 
 
-// Cotizaciones de Criptos (a futuro)
-
- 
 // borrar inversion
 function deleteInvest(dni) {
     const contenido = document.getElementById('content');
@@ -348,3 +391,31 @@ function deleteInvest(dni) {
         }
     }
 }
+// Consultar Cotizaciones de todas las cryptos
+function cotizaciones () {
+    const listado = document.getElementById('login');
+    const contenido = document.getElementById('content');
+    contenido.innerHTML = '';
+    listado.innerHTML = '';
+    const titulo = document.createElement('h2');
+    titulo.classList.add('tituloCotizaciones')
+    titulo.innerText = `Cotización de las criptos expresados en USD`;
+    listado.appendChild(titulo);
+    fetch ('https://api.coinpaprika.com/v1/tickers')
+    .then((respuesta) => respuesta.json())
+    .then((tickers) => {
+        tickers.forEach((ticker) => {
+            const bloqueCoin = document.createElement('div')
+            bloqueCoin.classList.add('bloqueCoin');
+            coin = document.createElement('p');
+            coin.classList.add('coin');
+            coin.innerHTML= `${ticker.name}`;
+            const price = document.createElement('p');
+            price.classList.add('price');
+            price.innerHTML= `USD ${ticker.quotes.USD.price.toFixed(2)}`;
+            bloqueCoin.appendChild(coin);
+            bloqueCoin.appendChild(price);
+            listado.appendChild(bloqueCoin);
+        });
+    });
+}    
