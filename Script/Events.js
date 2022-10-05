@@ -186,7 +186,6 @@ function agregarInversion (dni) {
     .then((respuesta) => respuesta.json())
     .then((tickers) => {
         tickers.forEach((ticker) => {
-            console.log(ticker.quotes.USD.price); //obtengo precio
             coin = document.createElement('option')
             coin.setAttribute("value", `${ticker.symbol}`);
             coin.innerText= `${ticker.name}`;
@@ -195,44 +194,55 @@ function agregarInversion (dni) {
         const cryptoSeleccionada = document.createElement('button');
         cryptoSeleccionada.innerText = `Seleccionar`;
         formInver.appendChild(cryptoSeleccionada);
-        cryptoSeleccionada.onclick = () => {
+        cryptoSeleccionada.onclick = () => { 
+            const inversionesCargadas = JSON.parse(localStorage.getItem(dni));
             investTag = seleccionarTicker.value;
-            const tag = document.createElement('p');
-            tag.innerText = `Ticker: ${investTag}`;
-            formInver.appendChild(tag);
-            const tagName = tickers.find((ele) => ele.symbol === investTag);
-            investName = tagName.name;
-            const nombreCrypto = document.createElement('p');
-            nombreCrypto.innerText = `Nombre ${investName}`;
-            formInver.appendChild(nombreCrypto);
-            const divisor = document.createElement('div');
-            divisor.innerHTML = `
-                                <label for = "Cantidad">Cantidad</label>
-                                <input type ="number" id ="Cantidad" Cantidad = "Cantidad" required>
-                                <label for = "Rendimiento">Rendimiento Anual</label>
-                                <input type ="number" id ="Rendimiento" Rendimiento = "Rendimiento" required>
-                                <input type = "button" id="enviar_form" value ="Cargar">
-                                    
-                ` 
-            formInver.appendChild(divisor);
-            investAmount =document.getElementById('Cantidad');
-            investRate = document.getElementById('Rendimiento');
-            const cargarForm = document.getElementById('enviar_form');
-            cargarForm.onclick = () => { 
-                const inversion = new Invest(investName, investTag, investAmount.value, investRate.value);
-                const inversionCargada = JSON.parse(localStorage.getItem(dni));
-                inversionCargada == null ? (
-                    localStorage.setItem(dni, JSON.stringify([inversion])),
-                    mensajeCargar(formInver, dni)
-                ) : (
-                    inversionCargada.push(inversion),
-                    localStorage.setItem(dni, JSON.stringify(inversionCargada)),
-                    mensajeCargar(formInver, dni)
-                )
-            } 
+            const buscar = inversionesCargadas.find((ele) => ele.investTag == investTag);
+            console.log(buscar);
+            if (buscar) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Esta inversión ya la tenes cargada',
+                    text: 'Something went wrong!',
+                  })
+            } else {
+                const tag = document.createElement('p');
+                tag.innerText = `Ticker: ${investTag}`;
+                formInver.appendChild(tag);
+                const tagName = tickers.find((ele) => ele.symbol === investTag);
+                investName = tagName.name;
+                const nombreCrypto = document.createElement('p');
+                nombreCrypto.innerText = `Nombre ${investName}`;
+                formInver.appendChild(nombreCrypto);
+                const divisor = document.createElement('div');
+                divisor.innerHTML = `
+                                    <label for = "Cantidad">Cantidad</label>
+                                    <input type ="number" id ="Cantidad" Cantidad = "Cantidad" required>
+                                    <label for = "Rendimiento">Rendimiento Anual</label>
+                                    <input type ="number" id ="Rendimiento" Rendimiento = "Rendimiento" required>
+                                    <input type = "button" id="enviar_form" value ="Cargar">
+                                        
+                    ` 
+                formInver.appendChild(divisor);
+                investAmount =document.getElementById('Cantidad');
+                investRate = document.getElementById('Rendimiento');
+                const cargarForm = document.getElementById('enviar_form');
+                cargarForm.onclick = () => { 
+                    const inversion = new Invest(investName, investTag, investAmount.value, investRate.value);
+                    const inversionCargada = JSON.parse(localStorage.getItem(dni));
+                    inversionCargada == null ? (
+                        localStorage.setItem(dni, JSON.stringify([inversion])),
+                        mensajeCargar(formInver, dni)
+                    ) : (
+                        inversionCargada.push(inversion),
+                        localStorage.setItem(dni, JSON.stringify(inversionCargada)),
+                        mensajeCargar(formInver, dni)
+                    )
+                } 
+            }
         };
 
-    });
+    })
 }
 
 // Pantalla despues de la carga de una inversion
