@@ -202,8 +202,8 @@ function agregarInversion (dni) {
             if (buscar) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Esta inversión ya la tenes cargada',
-                    text: 'Something went wrong!',
+                    width: 400,
+                    title: 'Esta inversión ya existe en tu cartea',
                   })
             } else {
                 const tag = document.createElement('p');
@@ -277,6 +277,7 @@ function showInvest (dni) {
                 const busqueda = tickers.find((ele) => ele.symbol == inversion.investTag);
                 const item = document.createElement('div');
                 item.classList.add('col');
+                saldoCartera =+ Number(busqueda.quotes.USD.price.toFixed(2))*Number(inversion.investAmount); 
                 item.innerHTML = `
                                 <div class="card">
                                 <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
@@ -286,9 +287,10 @@ function showInvest (dni) {
                                 <p class="card-text"> Cantidad: ${inversion.investAmount}</p>
                                 <p class="card-text"> Rendimiento Anual: ${inversion.investRate}%</p>
                                 <p class="card-text"> Precio USD: ${busqueda.quotes.USD.price.toFixed(2)}</p>
+                                <p class="card-text"> Valor en USD: ${(Number(busqueda.quotes.USD.price.toFixed(2))*Number(inversion.investAmount)).toFixed(2)}</p>
                                 </div>
                                 <div class="card-footer">
-                                <small class="text-muted">Saldo proyectado en 1 año: proximamente</small>
+                                <small class="text-muted">Saldo proyectado en 1 año: ${interesProyectado(Number(inversion.investAmount), Number(inversion.investRate))} ${inversion.investTag}</small>
                                 </div>
                 `
                 lista.appendChild(item);
@@ -429,3 +431,9 @@ function cotizaciones () {
         });
     });
 }    
+
+// Calcular el interes proyectado
+function interesProyectado(cantidad,interes) {
+    const interesganado = cantidad + (cantidad*interes / 100);
+    return interesganado;
+}

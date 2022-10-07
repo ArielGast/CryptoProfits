@@ -1,6 +1,8 @@
 body {
-    background: rgb(0,0,0);
-    background: linear-gradient(90deg, rgba(0,0,0,1) 13%, rgba(63,37,84,1) 56%, rgba(30,68,40,1) 100%);
+    /* background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(0,0,0,1) 13%, rgba(63,37,84,1) 56%, rgba(30,68,40,1) 100%); */
+    background: rgb(42,43,47);
+    background: linear-gradient(90deg, rgba(42,43,47,1) 0%, rgba(133,42,175,1) 48%, rgba(219,145,228,1) 100%);
     color: rgb(83, 111, 240);
     font-family: 'Yeseva One', cursive;
 }
@@ -13,8 +15,8 @@ body {
     gap: 8%;
 } 
 .nav_link {
-    color:orange;
-    font-size: 2rem;
+    color:rgb(48, 141, 25);
+    font-size: 1.7rem;
     padding-left: 1rem;
     text-decoration: none;
 }
