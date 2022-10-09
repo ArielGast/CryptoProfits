@@ -136,7 +136,8 @@ function searchName (dni) {
 function homeUser (nombre, dni) {
     const contenido = document.getElementById('login');
     contenido.innerHTML = "";
-    contenido.innerHTML = `<h3 class = "homeUser__h3">Bienvenido ${nombre}</h3>
+    contenido.innerHTML = `<spam class = "homeUser__h3">Bienvenido ${nombre}</spam>
+                           <p class = "mostrarSaldo"></p>
                            <nav class="navbar navbar-expand-lg">
                            <div class="container-fluid">
                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,6 +147,7 @@ function homeUser (nombre, dni) {
                            <div class="navbar-nav">
                            <a class="nav_link" id= "addInvest"  href="#">Agregar Inversión</a>
                            <a class="nav_link" id = "consInvest" href="#">Consutlar Cartera</a>
+                           <a class="nav_link" id = "showBalance" href="#">Balance</a>
                            <a class="nav_link" id = "delInvest" href="#">Borrar Inversión</a>
                            </div>
                            </div>
@@ -160,6 +162,10 @@ function homeUser (nombre, dni) {
     const consInvest = document.getElementById('consInvest');
     consInvest.onclick = () => {
         showInvest(dni, nombre);
+    }
+    const showBalance = document.getElementById('showBalance');
+    showBalance.onclick = () => {
+        pedirSaldo(dni);
     }
     const delInvest = document.getElementById('delInvest');
     delInvest.onclick = () => {
@@ -271,13 +277,12 @@ function showInvest (dni) {
         lista.classList.add('g-4');
         mostrarCartera.appendChild(lista);
         for (let inversion of listaInversiones){
-                fetch ('https://api.coinpaprika.com/v1/tickers')
+            fetch ('https://api.coinpaprika.com/v1/tickers')
                 .then((respuesta) => respuesta.json())
                 .then ((tickers) => {
                 const busqueda = tickers.find((ele) => ele.symbol == inversion.investTag);
                 const item = document.createElement('div');
                 item.classList.add('col');
-                saldoCartera =+ Number(busqueda.quotes.USD.price.toFixed(2))*Number(inversion.investAmount); 
                 item.innerHTML = `
                                 <div class="card">
                                 <img src="./Images/ImagenFondo.jpg" class="card-img-top" alt="monedas">
@@ -340,6 +345,7 @@ function deleteInvest(dni) {
         const elegido = document.getElementById('eleccion')
         const carteraFiltrada = cartera.filter((item) => item.investTag === elegido.value);
         const lista = document.createElement('div');
+        lista.classList.add('container-fluid');
         lista.classList.add('row');
         lista.classList.add('row-cols-1');
         lista.classList.add('row-cols-md-4');
@@ -436,4 +442,46 @@ function cotizaciones () {
 function interesProyectado(cantidad,interes) {
     const interesganado = cantidad + (cantidad*interes / 100);
     return interesganado;
+}
+
+// Pedir saldo total de la cartera
+
+function pedirSaldo(dni)  {
+    let saldoCartera = [];
+    let saldo = 0;
+    const contenido = document.getElementById('content');
+    contenido.innerHTML = '';
+    const inversiones = JSON.parse(localStorage.getItem(dni));
+    if (inversiones != null) {
+        fetch('https://api.coinpaprika.com/v1/tickers')
+        .then((respuesta) => respuesta.json())
+        .then ((tickers) => {
+                let i = 0;
+                for (let inversion of inversiones) {  
+                const busqueda = tickers.find((ele) => ele.symbol == inversion.investTag);
+                saldoCartera[i] = (Number(inversion.investAmount)*Number(busqueda.quotes.USD.price)); 
+                i++; 
+            }   
+        })
+        .then(() => {
+            for(const ele of saldoCartera) {
+                saldo = Number(ele)  + saldo;
+            }
+            const item = document.createElement('div');
+            item.classList.add('container-fluid');
+            item.classList.add('row');
+            item.classList.add('row-cols-1');
+            item.classList.add('row-cols-md-4');
+            item.classList.add('g-4');
+            item.innerHTML = `
+                                <div class="card">
+                                <img src="./Images/catcyberpunk2.png" class="card-img-top" alt="gato calculando">
+                                <div class="card-body">
+                                <h5 class="card-title">Saldo de tu Cartera</h5>
+                                <p class="card-text"> El total de tu inversión es de USD ${saldo.toFixed(2)}</p>
+                                
+                            `
+            contenido.appendChild(item);        
+        })
+    }    
 }
