@@ -543,6 +543,7 @@ function pedirSaldo(dni)  {
                 saldo = Number(ele)  + saldo;
             }
             const item = document.createElement('div');
+            item.classList.add('mostrarBalance');
             item.classList.add('container-fluid');
             item.classList.add('row');
             item.classList.add('row-cols-1');
